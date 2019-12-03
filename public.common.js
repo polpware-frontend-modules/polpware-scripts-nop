@@ -2,8 +2,6 @@
 ** nopCommerce custom js functions
 */
 
-
-
 function OpenWindow(query, w, h, scroll) {
     var l = (screen.width - w) / 2;
     var t = (screen.height - h) / 2;
@@ -28,23 +26,28 @@ function displayAjaxLoading(display) {
 
 function displayPopupNotification(message, messagetype, modal) {
     //types: success, error, warning
-    var container;
+    var containerId;
     if (messagetype == 'success') {
         //success
-        container = $('#dialog-notifications-success');
+        containerId = 'notifications-success';
     }
     else if (messagetype == 'error') {
         //error
-        container = $('#dialog-notifications-error');
+        containerId = 'notifications-error';
     }
     else if (messagetype == 'warning') {
         //warning
-        container = $('#dialog-notifications-warning');
+        containerId = 'notifications-warning';
     }
     else {
         //other
-        container = $('#dialog-notifications-success');
+        containerId = 'notifications-success';
     }
+
+    var isModal = (modal ? true : false);
+    containerId = (isModal ? '#dialog-' : '#inline-') + containerId;
+
+    var container = $(containerId);
 
     //we do not encode displayed message
     var htmlcode = '';
@@ -56,13 +59,14 @@ function displayPopupNotification(message, messagetype, modal) {
         }
     }
 
-    container.html(htmlcode);
+    container.find('.msg-content').html(htmlcode);
 
-    var isModal = (modal ? true : false);
-    container.dialog({
-        modal: isModal,
-        width: 350
-    });
+    if (isModal) {
+        container.modal('show');
+    } else {
+        container.show();
+        container.children().first().alert();
+    }
 }
 function displayPopupContentFromUrl(url, title, modal, width) {
     var isModal = (modal ? true : false);
