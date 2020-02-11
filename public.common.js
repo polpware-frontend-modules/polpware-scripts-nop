@@ -1,4 +1,4 @@
-﻿/*
+/*
 ** nopCommerce custom js functions
 */
 
@@ -6,7 +6,7 @@ function OpenWindow(query, w, h, scroll) {
     var l = (screen.width - w) / 2;
     var t = (screen.height - h) / 2;
 
-    winprops = 'resizable=0, height=' + h + ',width=' + w + ',top=' + t + ',left=' + l + 'w';
+    var winprops = 'resizable=0, height=' + h + ',width=' + w + ',top=' + t + ',left=' + l + 'w';
     if (scroll) winprops += ',scrollbars=1';
     var f = window.open(query, "_blank", winprops);
 }
@@ -47,7 +47,7 @@ function displayPopupNotification(message, messagetype, modal) {
     var isModal = (modal ? true : false);
     containerId = (isModal ? '#dialog-' : '#inline-') + containerId;
 
-    var container = $(containerId);
+    var $container = $(containerId);
 
     //we do not encode displayed message
     var htmlcode = '';
@@ -59,15 +59,28 @@ function displayPopupNotification(message, messagetype, modal) {
         }
     }
 
-    container.find('.msg-content').html(htmlcode);
+    $container.find('.msg-content').html(htmlcode);
 
     if (isModal) {
-        container.modal('show');
+        $container.modal('show');
     } else {
-        container.show();
-        container.children().first().alert();
+        $container.show();
+        const $elem = $container.find('button.close');
+        $elem.off('click').on('click', function(evt) {
+            evt.preventDefault();
+            $container.hide();
+        });
     }
 }
+
+function displayPopupNotification(isModal) {
+    const prefix = isModal ? '#dialog-' : '#inline-';
+    const containers = ['success', 'error', 'warning', 'success'];
+    containers.forEach(elem => {
+        $(prefix + 'notifications-' + elem).hide();
+    });
+}
+
 function displayPopupContentFromUrl(url, title, modal, width) {
     var isModal = (modal ? true : false);
     var targetWidth = (width ? width : 550);
