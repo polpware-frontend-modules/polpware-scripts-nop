@@ -73,7 +73,7 @@ function displayPopupNotification(message, messagetype, modal) {
     }
 }
 
-function displayPopupNotification(isModal) {
+function dismissPopupNotification(isModal) {
     const prefix = isModal ? '#dialog-' : '#inline-';
     const containers = ['success', 'error', 'warning', 'success'];
     containers.forEach(elem => {
